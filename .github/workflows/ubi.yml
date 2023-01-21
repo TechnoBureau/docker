@@ -60,7 +60,7 @@ jobs:
             type=ref,event=branch
             type=ref,event=tag
           labels: |
-            maintainer=TechnoBureau
+            maintainer=${{github.repository_owner}}
             name=${{github.repository_owner}}/${{github.workflow}}
             io.k8s.display-name=${{github.repository_owner}}/${{github.workflow}}
             version=${{ env.MAJOR }}.${{ env.MINOR }}
