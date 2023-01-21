@@ -53,7 +53,7 @@ jobs:
           flavor: latest=true
           tags: |
             type=raw,enable=true,priority=200,prefix=,suffix=,value=${{ env.MAJOR }}.${{ env.MINOR }}.${{ github.run_number }}
-            type=raw,enable=true,priority=300,prefix=,suffix=,value=${{ env.MAJOR }}.${{ env.MINOR }}.${GITHUB_SHA::7}
+            type=raw,enable=true,priority=300,prefix=,suffix=,value=${{ env.MAJOR }}.${{ env.MINOR }}.${{ github.workflow_sha::7 }}
             type=ref,event=branch
             type=ref,event=tag
 
