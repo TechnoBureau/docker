@@ -49,7 +49,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: ${{ env.REGISTRY }}/${{GITHUB_REPOSITORY_OWNER}}/${{github.workflow}}
+          images: ${{ env.REGISTRY }}/${{github.repository_owner}}/${{github.workflow}}
           flavor: latest=true
           tags: |
             type=raw,enable=true,priority=200,prefix=,suffix=,value=${{ env.MAJOR }}.${{ env.MINOR }}.${{ github.run_number }}
