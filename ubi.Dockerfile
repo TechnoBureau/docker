@@ -11,15 +11,15 @@ ARG BUILD_VERSION
 
 COPY --from=builder /mnt/rootfs/ /
 
-ENV SAG_HOME /opt/technobureau
+ENV HOME /opt/technobureau
 
-COPY --from=builder --chown=1724:0 ${SAG_HOME}/ ${SAG_HOME}/
+COPY --from=builder --chown=1724:0 ${HOME}/ ${HOME}/
 
 ENV LANG=en_US.UTF8 \
     LC_ALL=en_US.UTF8
     
 USER 1724
-WORKDIR ${SAG_HOME}
+WORKDIR ${HOME}
 
 ENV PATH=/opt/technobureau:/opt/technobureau/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
