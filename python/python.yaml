@@ -1,0 +1,5 @@
+packages:
+  list:
+    - python3-libs
+commands:
+  - '/tmp/venv.sh'
