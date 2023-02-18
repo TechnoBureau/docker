@@ -10,6 +10,8 @@ source .venv/bin/activate
         cp -r /tmp/venv/* $WORKDIR/
         chown $USER:0 -R $WORKDIR/
         chmod 750 -R $WORKDIR/
+        #cd $WORKDIR
+        #python3 manage.py collectstatic --no-input
     fi
     ##Removal of pip 
     pip uninstall -y pip
