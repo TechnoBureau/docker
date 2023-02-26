@@ -64,7 +64,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{github.repository_owner}}/${{github.workflow}}
           flavor: latest=true
           tags: |
-            type=raw,enable=true,priority=200,prefix=,suffix=,value=${{ env.MAJOR }}.${{ env.MINOR }}.${{ github.run_number }}
+            type=raw,enable=true,priority=200,prefix=,suffix=,value=${{ args.MAJOR }}.${{ args.MINOR }}.${{ github.run_number }}
             type=raw,enable=true,priority=300,prefix=,suffix=,value=${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.SHORT_SHA }}
             type=ref,event=branch
             type=ref,event=tag
@@ -92,5 +92,5 @@ jobs:
           file: ${{github.workflow}}.Dockerfile
           platforms: linux/amd64,linux/arm64
           build-args: |
-            MAJOR=${{ args.major }}
-            MINOR=${{ args.minor }}
+            MAJOR=${{ args.MAJOR }}
+            MINOR=${{ args.MAJOR }}
