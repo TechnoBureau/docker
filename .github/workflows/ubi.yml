@@ -12,8 +12,8 @@ on:
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
-  MAJOR: ${{ steps.meta.outputs.MAJOR }}
-  MINOR: ${{ steps.meta.outputs.MINOR }}
+  # MAJOR: ${{ steps.meta.outputs.MAJOR }}
+  # MINOR: ${{ steps.meta.outputs.MINOR }}
 
 jobs:
   build:
@@ -91,3 +91,6 @@ jobs:
           cache-to: type=gha,mode=max
           file: ${{github.workflow}}.Dockerfile
           platforms: linux/amd64,linux/arm64
+          build-args: |
+            MAJOR=${{ args.major }}
+            MINOR=${{ args.minor }}
