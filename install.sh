@@ -1,6 +1,30 @@
+#!/bin/bash
+
 export defn=/opt/final.yaml
 
-curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_$(uname -m) -o /tmp/yq &&\
+function gatherosArch {
+    # Get the OS Name
+    export os=$(uname -s | awk '{print tolower($0)}')
+
+    # Get the machine arch
+    arch=$(uname -m)
+    case "$arch" in
+        x86)     arch="x86";;
+        ia64)    arch="ia64";;
+        i?86)    arch="x86";;
+        amd64)   arch="amd64";;
+        x86_64)  arch="x86_64";;
+        sparc64) arch="sparc64";;
+        arm64)   arch="arm64";;
+        aarch64) arch="arm64";;
+        * )      arch="x86_64";;
+    esac
+    export arch
+}
+
+gatherosArch
+
+curl -L "https://github.com/mikefarah/yq/releases/latest/download/yq_${os}_${arch}" -o /tmp/yq &&\
 chmod +x /tmp/yq
 
 /tmp/yq eval-all -o=y -I=0 '. as $item ireduce ({}; . *+ $item)' /tmp/*.yaml > $defn
