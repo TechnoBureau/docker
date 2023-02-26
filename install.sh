@@ -27,8 +27,6 @@ gatherosArch
 curl -L "https://github.com/mikefarah/yq/releases/latest/download/yq_${os}_${arch}" -o /tmp/yq &&\
 chmod +x /tmp/yq
 
-echo "https://github.com/mikefarah/yq/releases/latest/download/yq_${os}_${arch}"
-
 /tmp/yq eval-all -o=y -I=0 '. as $item ireduce ({}; . *+ $item)' /tmp/*.yaml > $defn
 
 function initialize {
