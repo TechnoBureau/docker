@@ -30,12 +30,13 @@ EXPOSE 8000
 #change to `worker` to run the docker as worker instead of app.
 ENV app=web
 
-#Disable Debug on production. Also Django won't service static file while debug is false, 
+#Disable Debug on production. Also Django won't service static file while debug is false,
 #so enable true on development setup to serve static files
 ENV DEBUG=false
 
-ENV LOG_LEVEL=info app_name=config 
+ENV LOG_LEVEL=info app_name=config
 ENV DJANGO_SUPERUSER_USERNAME=admin DJANGO_SUPERUSER_EMAIL=admin@example.com DJANGO_SUPERUSER_PASSWORD=password
+ENV ORACLE_USER=ADMIN ORACLE_PASSWORD= ORACLE_DB=
 
 ENV REDIS_URL=redis://redis:6379/0
 

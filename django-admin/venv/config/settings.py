@@ -78,10 +78,24 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'sqlite': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    },
+    'default': {
+        'ENGINE': 'django.db.backends.oracle',
+        'NAME': os.getenv("ORACLE_DB", "TECHNOBUREAU"),
+        'USER': os.getenv("ORACLE_USER", "ADMIN"),
+        'PASSWORD': os.getenv("ORACLE_PASSWORD"),
+        'HOST': '',
+        'PORT': '',
+        'OPTIONS': {
+            'threaded': True,
+            'use_tns': True,
+            'dsn': 'ORCLDB',
+            'wallet_location': BASE_DIR / 'Wallet_TECHNOBUREAU',
+        },
+    },
 }
 
 

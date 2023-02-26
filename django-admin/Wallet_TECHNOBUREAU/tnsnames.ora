@@ -1,0 +1,8 @@
+technobureau_high = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.ap-hyderabad-1.oraclecloud.com))(connect_data=(service_name=yuy6i2fbgu3wlir_technobureau_high.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+technobureau_low = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.ap-hyderabad-1.oraclecloud.com))(connect_data=(service_name=yuy6i2fbgu3wlir_technobureau_low.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+technobureau_medium = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.ap-hyderabad-1.oraclecloud.com))(connect_data=(service_name=yuy6i2fbgu3wlir_technobureau_medium.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+
+
