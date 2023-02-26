@@ -1,6 +1,6 @@
 export defn=/opt/final.yaml
 
-curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /tmp/yq &&\
+curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_$(uname -m) -o /tmp/yq &&\
 chmod +x /tmp/yq
 
 /tmp/yq eval-all -o=y -I=0 '. as $item ireduce ({}; . *+ $item)' /tmp/*.yaml > $defn
@@ -46,7 +46,7 @@ function builder_install {
 }
 function final_img_install {
     if [ -z "$PACKAGE_DISABLE" ]
-    then 
+    then
         return;
     fi
     ## Release/Final Image Package List
@@ -69,7 +69,7 @@ function final_img_install {
 }
 function base_img_install {
     if [ -z "$PACKAGE_DISABLE" ]
-    then 
+    then
         return;
     fi
 
@@ -82,7 +82,7 @@ function base_img_install {
     BASE_PACKAGE_LIST=$(echo ${Arry[@]//\"/})
 
     ## Creation of Base Image
-    
+
     if [ ! -z "$CHROOT" ]
     then
         $PACKAGE_MANAGER install --installroot $CHROOT $PACKAGE_OPTIONS $BASE_PACKAGE_OPTIONS $BASE_PACKAGE_LIST
@@ -90,7 +90,7 @@ function base_img_install {
     else
         $PACKAGE_MANAGER install $PACKAGE_OPTIONS $BASE_PACKAGE_OPTIONS $BASE_PACKAGE_LIST
     fi
-    
+
     $PACKAGE_MANAGER clean all && rm -rf $CHROOT/var/cache/* $CHROOT/var/log/dnf* $CHROOT/var/log/yum.*
 
 }
@@ -131,7 +131,7 @@ function create_users {
     then
         mkdir -p $WORKDIR
     fi
-    
+
 }
 
 function cmd_exec {
@@ -157,7 +157,7 @@ function install_cron {
     fi
 }
 function install_binaries {
-    
+
     if [ -d "/tmp/bin" ] && [ -n "$(ls -A /tmp/bin)" ]; then
         cd /tmp/bin/
         mkdir -p $WORKDIR/bin
@@ -169,7 +169,7 @@ function install_binaries {
 }
 function configure_endpoint {
     ENTRYPOINT=$(/tmp/yq e -o=y -I=0 '.entrypoint' $1)
-    
+
     if [ ! -z "$ENTRYPOINT" ] && [ -f "/tmp/$ENTRYPOINT" ]
     then
         install -o $USER -g 0 -m 550 /tmp/$ENTRYPOINT $WORKDIR
@@ -180,7 +180,7 @@ function cleanup_files {
     readarray CMD_LIST < <(/tmp/yq e -o=j -I=0 '.cleanup_files[]' $1)
     for u in "${CMD_LIST[@]}"; do
         echo "Deleting ... ${u//$'\n'/}"
-        rm -rf ${u//$'\n'/} 
+        rm -rf ${u//$'\n'/}
     done
 }
 
