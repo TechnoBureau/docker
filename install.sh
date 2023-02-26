@@ -17,7 +17,7 @@ function gatherosArch {
         sparc64) arch="sparc64";;
         arm64)   arch="arm64";;
         aarch64) arch="arm64";;
-        * )      arch="x86_64";;
+        * )      arch="amd64";;
     esac
     export arch
 }
