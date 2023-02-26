@@ -13,7 +13,7 @@ function gatherosArch {
         ia64)    arch="ia64";;
         i?86)    arch="x86";;
         amd64)   arch="amd64";;
-        x86_64)  arch="x86_64";;
+        x86_64)  arch="amd64";;
         sparc64) arch="sparc64";;
         arm64)   arch="arm64";;
         aarch64) arch="arm64";;
