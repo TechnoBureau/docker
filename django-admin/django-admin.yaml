@@ -1,0 +1,18 @@
+packages:
+  list:
+    - python3-libs
+    - vim
+  builder:
+    list:
+      - openssl-devel
+      - libffi-devel
+      - python3-devel
+      - libxml2-devel
+      - libxslt-devel
+      - zlib-devel
+      - postgresql-devel
+      - gcc
+      - make
+      - glibc-devel
+commands:
+  - '/tmp/venv.sh'

@@ -1,0 +1,40 @@
+name: UBI
+packages:
+  manager: yum
+  chroot: /mnt/rootfs
+  base:
+    options:
+      - --releasever 9
+    list:
+      - coreutils-single
+      - glibc-minimal-langpack
+  options:
+    - "--setopt install_weak_deps=0"
+    - "--nodocs"
+    - "-y"
+  list:
+    - glibc-langpack-en
+    - zlib
+    # - vi
+    # - tar
+    # - hostname
+    # - findutils
+    # - net-tools
+    # - procps-ng
+  #builder:
+    # list:
+    #   - shadow-utils
+    #   - wget
+    #   - python39-pip
+    #   - unzip
+    #commands:
+    #  - 'bash /tmp/builder.sh'
+users:
+  - name: tbadmin
+    group: tbadmin
+    descr: "TechnoBureau Admin"
+    uid: 1724
+    gid: 1724
+    home: /opt/technobureau
+user: tbadmin
+workdir: /opt/technobureau

@@ -1,0 +1,10 @@
+packages:
+  list:
+    #- go
+  #  - vim
+    - libaio
+  builder:
+    list:
+      - go
+commands:
+  - '/tmp/go-setup.sh'
