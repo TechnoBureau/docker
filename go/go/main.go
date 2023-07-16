@@ -30,9 +30,10 @@ func main() {
 
 	// Set up db
 	db, err := models.NewDB()
-	if err != nil {
-		log.WithError(err).Fatal("Failed to connect to database")
-	}
+	// if err != nil {
+	// 	log.WithError(err).Fatal("Failed to connect to database")
+	// }
+	log.Print(err)
 	defer db.Close()
 
 	// Inject DB into router
@@ -47,8 +48,11 @@ func main() {
 	// Set up the Health routes
 	routes.SetupHealthRoutes(router)
 
+	//Fetch API
+	routes.SetupFetchAPIRoutes(router)
+
 	// Run the server
-	if err := router.Run(":8080"); err != nil {
+	if err := router.Run(":8081"); err != nil {
 		log.WithError(err).Fatal("Failed to start server")
 	}
 }

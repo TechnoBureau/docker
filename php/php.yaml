@@ -1,0 +1,6 @@
+packages:
+  list:
+    - php
+    - php-cli
+  module:
+    - php:8.1

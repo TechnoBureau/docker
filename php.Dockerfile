@@ -1,6 +1,6 @@
 FROM registry.access.redhat.com/ubi9/ubi AS builder
 
-COPY *.sh docker.yaml go libs/oracle /tmp/
+COPY *.sh docker.yaml php /tmp/
 RUN chmod +rx /tmp/*.sh
 RUN bash /tmp/install.sh && rm -rf /tmp/*
 
@@ -20,11 +20,4 @@ WORKDIR ${HOME}
 
 ENV PATH=/opt/technobureau:/opt/technobureau/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-ENV GIN_MODE=production
-
-ENV LD_LIBRARY_PATH=/opt/technobureau/oracle/lib:$LD_LIBRARY_PATH
-ENV TNS_ADMIN=/opt/technobureau/oracle/lib/network/admin
-
-EXPOSE 8080
-
-ENTRYPOINT entrypoint.sh
+ENTRYPOINT entrypoint.php

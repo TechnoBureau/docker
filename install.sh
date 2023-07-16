@@ -91,6 +91,28 @@ function final_img_install {
     fi
     #sed -i -e '/LANG/c LANG=en_US.UTF8' $CHROOT/etc/locale.conf
 }
+function module_install {
+    if [ -z "$PACKAGE_DISABLE" ]
+    then
+        return;
+    fi
+    ## Module List to be enabled
+    readarray Arry < <(/tmp/yq e -o=j -I=0 '.packages.module[]' $1)
+    MODULE_LIST=$(echo ${Arry[@]//\"/})
+
+    ## Enable Module for the packages to be installed
+    if [ ! -z "$MODULE_LIST" ]
+    then
+        if [ ! -z "$CHROOT" ]
+        then
+            $PACKAGE_MANAGER module enable --installroot $CHROOT $PACKAGE_OPTIONS $BASE_PACKAGE_OPTIONS $MODULE_LIST
+        else
+            $PACKAGE_MANAGER module enable $PACKAGE_OPTIONS $BASE_PACKAGE_OPTIONS $MODULE_LIST
+        fi
+
+        $PACKAGE_MANAGER clean all && rm -rf $CHROOT/var/cache/* $CHROOT/var/log/dnf* $CHROOT/var/log/yum.*
+    fi
+}
 function base_img_install {
     if [ -z "$PACKAGE_DISABLE" ]
     then
@@ -211,6 +233,7 @@ function cleanup_files {
 initialize $defn
 builder_install $defn
 base_img_install $defn
+module_install $defn
 final_img_install $defn
 create_users $defn
 cmd_exec $defn

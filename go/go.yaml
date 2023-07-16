@@ -3,6 +3,7 @@ packages:
     #- go
   #  - vim
     - libaio
+    - ca-certificates
   builder:
     list:
       - go
