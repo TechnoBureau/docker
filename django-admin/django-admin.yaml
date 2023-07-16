@@ -16,3 +16,4 @@ packages:
       - glibc-devel
 commands:
   - '/tmp/venv.sh'
+  - '/tmp/oracle-client.sh'

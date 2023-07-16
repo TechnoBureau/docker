@@ -1,6 +1,6 @@
 FROM registry.access.redhat.com/ubi9/ubi AS builder
 
-COPY *.sh docker.yaml django-admin /tmp/
+COPY *.sh docker.yaml django-admin libs/oracle /tmp/
 RUN chmod +rx /tmp/*.sh
 RUN bash /tmp/install.sh && rm -rf /tmp/*
 
@@ -39,5 +39,8 @@ ENV DJANGO_SUPERUSER_USERNAME=admin DJANGO_SUPERUSER_EMAIL=admin@example.com DJA
 ENV ORACLE_USER=ADMIN ORACLE_PASSWORD= ORACLE_DB=
 
 ENV REDIS_URL=redis://redis:6379/0
+
+ENV LD_LIBRARY_PATH=/opt/technobureau/oracle/lib:$LD_LIBRARY_PATH
+ENV TNS_ADMIN=/opt/technobureau/oracle/lib/network/admin
 
 ENTRYPOINT entrypoint.sh

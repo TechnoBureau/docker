@@ -1,6 +1,6 @@
 FROM registry.access.redhat.com/ubi9/ubi AS builder
 
-COPY *.sh docker.yaml go /tmp/
+COPY *.sh docker.yaml go libs/oracle /tmp/
 RUN chmod +rx /tmp/*.sh
 RUN bash /tmp/install.sh && rm -rf /tmp/*
 
