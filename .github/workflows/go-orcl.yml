@@ -1,4 +1,4 @@
-name: go
+name: go-orcl
 on:
   push:
     branches: [ "main" ]

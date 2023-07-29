@@ -7,3 +7,4 @@ packages:
       - go
 commands:
   - '/tmp/go-setup.sh'
+  - '/tmp/oracle-client.sh'

@@ -1,4 +1,4 @@
-name: go
+name: symfony
 on:
   push:
     branches: [ "main" ]
@@ -10,8 +10,8 @@ on:
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
-  MAJOR: 1
-  MINOR: 9.1
+  MAJOR: 6
+  MINOR: 3
 
 jobs:
   build:

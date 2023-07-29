@@ -20,4 +20,6 @@ WORKDIR ${HOME}
 
 ENV PATH=/opt/technobureau:/opt/technobureau/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-ENTRYPOINT entrypoint.php
+ENTRYPOINT ["php-entrypoint"]
+
+CMD entrypoint.php

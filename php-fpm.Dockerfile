@@ -1,6 +1,6 @@
 FROM registry.access.redhat.com/ubi9/ubi AS builder
 
-COPY *.sh docker.yaml go /tmp/
+COPY *.sh docker.yaml php-fpm /tmp/
 RUN chmod +rx /tmp/*.sh
 RUN bash /tmp/install.sh && rm -rf /tmp/*
 
@@ -20,9 +20,6 @@ WORKDIR ${HOME}
 
 ENV PATH=/opt/technobureau:/opt/technobureau/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-ENV GIN_MODE=release
+ENTRYPOINT ["entrypoint.sh"]
 
-
-EXPOSE 8080
-
-ENTRYPOINT entrypoint.sh
+CMD ["php-fpm"]

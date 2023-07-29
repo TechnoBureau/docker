@@ -57,6 +57,17 @@ function builder_install {
         eval ${u}
     done
 
+    ## Module List to be enabled
+    readarray Arry < <(/tmp/yq e -o=j -I=0 '.packages.module[]' $1)
+    MODULE_LIST=$(echo ${Arry[@]//\"/})
+
+    ## Enable Module for the packages to be installed
+    if [ ! -z "$MODULE_LIST" ]
+    then
+        $PACKAGE_MANAGER module enable $PACKAGE_OPTIONS $MODULE_LIST
+        $PACKAGE_MANAGER clean all && rm -rf /var/cache/* /var/log/dnf* /var/log/yum*
+    fi
+
     ## Builder Image stage List which is not required for final Image
     readarray Arry < <(/tmp/yq e -o=j -I=0 '.packages.builder.list[]' $1)
     BUILDER_PACKAGE_LIST=$(echo ${Arry[@]//\"/})
@@ -103,13 +114,7 @@ function module_install {
     ## Enable Module for the packages to be installed
     if [ ! -z "$MODULE_LIST" ]
     then
-        if [ ! -z "$CHROOT" ]
-        then
-            $PACKAGE_MANAGER module enable --installroot $CHROOT $PACKAGE_OPTIONS $BASE_PACKAGE_OPTIONS $MODULE_LIST
-        else
-            $PACKAGE_MANAGER module enable $PACKAGE_OPTIONS $BASE_PACKAGE_OPTIONS $MODULE_LIST
-        fi
-
+        $PACKAGE_MANAGER module enable --installroot $CHROOT $PACKAGE_OPTIONS $BASE_PACKAGE_OPTIONS $MODULE_LIST
         $PACKAGE_MANAGER clean all && rm -rf $CHROOT/var/cache/* $CHROOT/var/log/dnf* $CHROOT/var/log/yum.*
     fi
 }
@@ -212,6 +217,15 @@ function install_binaries {
             install -o $USER -g 0 -m 750  /tmp/bin/$FILE $WORKDIR/bin/
         done
     fi
+    chown $USER:0 -R $CHROOT/var/log
+    chown $USER:0 -R $CHROOT/var/cache
+}
+function copy_configuration {
+
+    if [ -d "/tmp/conf" ] && [ -n "$(ls -A /tmp/conf)" ]; then
+        cd /tmp/conf/
+        cp -R * $CHROOT/etc/
+    fi
 }
 function configure_endpoint {
     ENTRYPOINT=$(/tmp/yq e -o=y -I=0 '.entrypoint' $1)
@@ -239,6 +253,7 @@ create_users $defn
 cmd_exec $defn
 install_cron $defn
 install_binaries $defn
+copy_configuration $defn
 configure_endpoint $defn
 cleanup_files $defn
 rm -rf $defn

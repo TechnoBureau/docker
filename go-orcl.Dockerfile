@@ -1,6 +1,6 @@
 FROM registry.access.redhat.com/ubi9/ubi AS builder
 
-COPY *.sh docker.yaml go /tmp/
+COPY *.sh docker.yaml go-orcl libs/oracle /tmp/
 RUN chmod +rx /tmp/*.sh
 RUN bash /tmp/install.sh && rm -rf /tmp/*
 
@@ -22,6 +22,8 @@ ENV PATH=/opt/technobureau:/opt/technobureau/bin:/usr/local/sbin:/usr/local/bin:
 
 ENV GIN_MODE=release
 
+ENV LD_LIBRARY_PATH=/opt/technobureau/oracle/lib:$LD_LIBRARY_PATH
+ENV TNS_ADMIN=/opt/technobureau/oracle/lib/network/admin
 
 EXPOSE 8080
 

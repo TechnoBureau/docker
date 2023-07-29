@@ -1,0 +1,20 @@
+packages:
+  list:
+    - php
+    - php-cli # Mandatory for composer and other cli execution
+    - php-xml # PHP-DOM and PHP-XML /SimpleXML - mandatory for symfony
+    - php-opcache #PHP accelerator - Highly recommended
+    - php-apcu
+    - php-fpm
+    - unzip
+    - git
+  module:
+    - php:8.1
+  builder:
+    list:
+#      - git
+      - php-cli
+#      - php-xml
+#      - unzip #Unpacking composer packages
+commands:
+  - '/tmp/composer-setup.sh'
