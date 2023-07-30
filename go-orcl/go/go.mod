@@ -6,9 +6,9 @@ require (
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/godror/godror v0.37.0
+	github.com/google/uuid v1.3.0
 	github.com/lib/pq v1.10.9
 	github.com/sirupsen/logrus v1.9.3
-	github.com/toorop/gin-logrus v0.0.0-20210225092905-2c785434f26f
 )
 
 require (

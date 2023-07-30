@@ -6,7 +6,6 @@ import (
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
-	//_ "github.com/godror/godror"
 	_ "github.com/lib/pq"
 )
 
@@ -77,7 +76,7 @@ func NewDB() (*sql.DB, error) {
 		connectionString = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbParams["username"], dbParams["password"], dbParams["server"], dbParams["port"], dbParams["db"])
 	case "postgres":
 		driverName = "postgres"
-		connectionString = fmt.Sprintf("postgres://%s:%s@%s:%s/%s", dbParams["username"], dbParams["password"], dbParams["server"], dbParams["port"], dbParams["db"])
+		connectionString = fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", dbParams["username"], dbParams["password"], dbParams["server"], dbParams["port"], dbParams["db"])
 	default:
 		return nil, fmt.Errorf("unsupported database type: %s", dbType)
 	}

@@ -2,7 +2,6 @@ package models
 
 import (
 	"database/sql"
-	"fmt"
 )
 
 // Album represents an album in the database
@@ -19,7 +18,7 @@ func GetAlbums(db *sql.DB) ([]Album, error) {
 
 	rows, err := db.Query("SELECT * FROM albums")
 	if err != nil {
-		return nil, fmt.Errorf("error executing query: %w", err)
+		return nil, err
 	}
 	defer rows.Close()
 
@@ -27,14 +26,14 @@ func GetAlbums(db *sql.DB) ([]Album, error) {
 		var album Album
 		err := rows.Scan(&album.ID, &album.Title, &album.Artist, &album.Price)
 		if err != nil {
-			return nil, fmt.Errorf("error scanning row: %w", err)
+			return nil, err
 		}
 		albums = append(albums, album)
 	}
 
 	err = rows.Err()
 	if err != nil {
-		return nil, fmt.Errorf("error iterating rows: %w", err)
+		return nil, err
 	}
 
 	return albums, nil
@@ -44,10 +43,10 @@ func GetAlbums(db *sql.DB) ([]Album, error) {
 func GetAlbumByID(db *sql.DB, id int) (*Album, error) {
 	var album Album
 
-	row := db.QueryRow("SELECT * FROM albums WHERE id = :id", sql.Named("id", id))
+	row := db.QueryRow("SELECT * FROM albums WHERE id = $1", id)
 	err := row.Scan(&album.ID, &album.Title, &album.Artist, &album.Price)
 	if err != nil {
-		return nil, fmt.Errorf("error executing query: %w", err)
+		return nil, err
 	}
 
 	return &album, nil
@@ -55,25 +54,19 @@ func GetAlbumByID(db *sql.DB, id int) (*Album, error) {
 
 // CreateAlbum creates a new album in the database
 func CreateAlbum(db *sql.DB, album *Album) (*Album, error) {
-	result, err := db.Exec("INSERT INTO albums(title, artist, price) VALUES(:title, :artist, :price) RETURNING id INTO :id",
-		sql.Named("title", album.Title),
-		sql.Named("artist", album.Artist),
-		sql.Named("price", album.Price),
-		sql.Named("id", sql.Out{Dest: &album.ID}),
-	)
-	result.RowsAffected()
+	err := db.QueryRow("INSERT INTO albums(title, artist, price) VALUES($1, $2, $3) RETURNING id",
+		album.Title, album.Artist, album.Price).Scan(&album.ID)
 	if err != nil {
-		return nil, fmt.Errorf("error executing query: %w", err)
+		return nil, err
 	}
 	return album, nil
 }
 
 // DeleteAlbum deletes an album from the database by its ID
 func DeleteAlbum(db *sql.DB, id int) error {
-	_, err := db.Exec("DELETE FROM albums WHERE id = :id", sql.Named("id", id))
+	_, err := db.Exec("DELETE FROM albums WHERE id = $1", id)
 	if err != nil {
-		return fmt.Errorf("error executing query: %w", err)
+		return err
 	}
-
 	return nil
 }
