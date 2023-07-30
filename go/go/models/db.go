@@ -6,7 +6,7 @@ import (
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
-	_ "github.com/godror/godror"
+	//_ "github.com/godror/godror"
 	_ "github.com/lib/pq"
 )
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"net/http"
 	"os"
 	"tgo/models"
 	"tgo/routes"
@@ -30,14 +31,18 @@ func main() {
 
 	// Set up db
 	db, err := models.NewDB()
-	// if err != nil {
-	// 	log.WithError(err).Fatal("Failed to connect to database")
-	// }
 	log.Print(err)
 	defer db.Close()
 
 	// Inject DB into router
 	router.Use(func(c *gin.Context) {
+		if db == nil {
+			// Handle the error gracefully, for example, log it and send an error response
+			log.Errorln("Database connection is nil")
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+			c.Abort() // This will stop the execution of subsequent middleware and handlers
+			return
+		}
 		c.Set("db", db)
 		c.Next()
 	})
