@@ -93,7 +93,7 @@ func HandleLog(c *gin.Context, statusCode int, Msg string, obj any) {
 	//traceID := c.GetString(traceIDKey) // Get the traceID from the context
 	logEntry := log.WithFields(logrus.Fields{
 		"traceID":  c.GetString(string(traceIDKey)), // Get the traceID from the context
-		"status":   c.Writer.Status(),
+		"status":   statusCode,
 		"method":   c.Request.Method,
 		"path":     c.Request.URL.Path,
 		"ip":       c.ClientIP(),
