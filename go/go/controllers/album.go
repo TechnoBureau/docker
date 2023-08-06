@@ -17,6 +17,7 @@ func GetAlbums(c *gin.Context) {
 
 	albums, err := models.GetAlbums(db)
 	if err != nil {
+		c.Error(err)
 		common.HandleLog(c, http.StatusInternalServerError, "Failed to get albums", nil)
 		return
 	}
@@ -29,6 +30,7 @@ func GetAlbumByID(c *gin.Context) {
 
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
+		c.Error(err)
 		common.HandleLog(c, http.StatusBadRequest, "Invalid album ID", nil)
 		return
 	}
