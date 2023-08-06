@@ -7,6 +7,9 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
+	"github.com/pressly/goose/v3"
+	// "gorm.io/driver/mysql"
+	// "gorm.io/driver/postgres"
 )
 
 func NewDB() (*sql.DB, error) {
@@ -81,20 +84,68 @@ func NewDB() (*sql.DB, error) {
 		return nil, fmt.Errorf("unsupported database type: %s", dbType)
 	}
 
+	// Create a map to store the driver names and their corresponding gorm.Dialector functions
+	// drivers := map[string]gorm.Dialector{
+	// 	//"mysql":    mysql.Open(connectionString),
+	// 	"postgres": postgres.Open(connectionString),
+	// }
+
+	// // Check if the driver name exists in the map
+	// driver, ok := drivers[driverName]
+	// if !ok {
+	// 	panic("Invalid DB_DRIVER value. Supported values are 'mysql' or 'postgres'.")
+	// }
+
 	// Use the blank import to load the database driver dynamically
+	//sqldb, err := gorm.Open(driver, &gorm.Config{})
+
 	db, err = sql.Open(driverName, connectionString)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open %s driver: %w", dbType, err)
 	}
-
+	//db, err = sqldb.DB()
+	// if err != nil {
+	// 	panic("Failed to get the *sql.DB instance")
+	// }
 	// Set the maximum number of open connections
 	db.SetMaxOpenConns(25)
 	// Set the maximum number of idle connections
 	db.SetMaxIdleConns(25)
+
+	// Perform database schema migration
+	if err := migrateDatabase(driverName, connectionString); err != nil {
+		return nil, fmt.Errorf("error performing migration: %w", err)
+	}
 
 	err = db.Ping()
 	if err != nil {
 		return nil, fmt.Errorf("error pinging db: %w", err)
 	}
 	return db, nil
+}
+
+func migrateDatabase(driverName, connectionString string) error {
+	// Use goose to perform database schema migration
+	db, err := sql.Open(driverName, connectionString)
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+
+	if err := goose.SetDialect(driverName); err != nil {
+		return err
+	}
+	goose.SetTableName("migrations")
+
+	// Path to your migrations folder
+	migrationsDir := "migrations"
+
+	// Perform migration
+	err = goose.Up(db, migrationsDir)
+	if err != nil {
+		return fmt.Errorf("failed to apply migrations: %w", err)
+	}
+
+	return nil
+
 }
