@@ -1,0 +1,9 @@
+packages:
+  list:
+    - libaio
+    - ca-certificates
+  builder:
+    list:
+      - go
+commands:
+  - '/tmp/go-setup.sh'
