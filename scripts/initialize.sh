@@ -31,7 +31,7 @@ for d in *; do
 
     if [ -z "$result" ]; then
       result="\"$d\""
-      result1="{ \"$d\": { \"version\": \"$VERSION\" } }"
+      result1="\"$d\": { \"version\": \"$VERSION\" }"
     else
       result+=",\"$d\""
       result1+=", \"$d\": { \"version\": \"$VERSION\" }"
@@ -40,5 +40,5 @@ for d in *; do
 done
 
 echo "images=[$result]"
-echo "images_metadata=[$result1]"
+echo "images_metadata={$result1}"
 echo "version=${GENERAL_VERSION}"
