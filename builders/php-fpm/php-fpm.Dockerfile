@@ -1,10 +1,14 @@
-FROM registry.access.redhat.com/ubi9/ubi AS builder
+ARG basebuilder=registry.access.redhat.com/ubi9/ubi
+ARG baseruntime=scratch
+ARG VERSION=8.1.x
 
-COPY *.sh docker.yaml php /tmp/
+FROM ${basebuilder} AS builder
+
+COPY scripts/*.sh docker.yaml php-fpm /tmp/
 RUN chmod +rx /tmp/*.sh
 RUN bash /tmp/install.sh && rm -rf /tmp/*
 
-FROM scratch
+FROM ${baseruntime} AS runtime
 
 COPY --from=builder /mnt/rootfs/ /
 
@@ -20,6 +24,6 @@ WORKDIR ${HOME}
 
 ENV PATH=/opt/technobureau:/opt/technobureau/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-ENTRYPOINT ["php-entrypoint"]
+ENTRYPOINT ["entrypoint.sh"]
 
-CMD entrypoint.php
+CMD ["php-fpm"]

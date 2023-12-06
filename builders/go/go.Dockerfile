@@ -1,10 +1,14 @@
-FROM registry.access.redhat.com/ubi9/ubi AS builder
+ARG basebuilder=registry.access.redhat.com/ubi9/ubi
+ARG baseruntime=scratch
+ARG VERSION=1.9.1
 
-COPY *.sh docker.yaml /tmp/
+FROM ${basebuilder} AS builder
+
+COPY scripts/*.sh docker.yaml go /tmp/
 RUN chmod +rx /tmp/*.sh
 RUN bash /tmp/install.sh && rm -rf /tmp/*
 
-FROM scratch
+FROM ${baseruntime} AS runtime
 
 COPY --from=builder /mnt/rootfs/ /
 
@@ -20,4 +24,9 @@ WORKDIR ${HOME}
 
 ENV PATH=/opt/technobureau:/opt/technobureau/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-CMD ["/bin/bash"]
+ENV GIN_MODE=release
+
+
+EXPOSE 8080
+
+ENTRYPOINT entrypoint.sh

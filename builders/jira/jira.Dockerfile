@@ -1,10 +1,14 @@
-FROM registry.access.redhat.com/ubi9/ubi AS builder
+ARG basebuilder=registry.access.redhat.com/ubi9/ubi
+ARG baseruntime=scratch
+ARG VERSION=1.9.1
 
-COPY *.sh docker.yaml go /tmp/
+FROM ${basebuilder} AS builder
+
+COPY scripts/*.sh docker.yaml jira /tmp/
 RUN chmod +rx /tmp/*.sh
 RUN bash /tmp/install.sh && rm -rf /tmp/*
 
-FROM scratch
+FROM ${baseruntime} AS runtime
 
 COPY --from=builder /mnt/rootfs/ /
 

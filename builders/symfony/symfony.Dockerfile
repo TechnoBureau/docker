@@ -1,10 +1,14 @@
-FROM registry.access.redhat.com/ubi9/ubi AS builder
+ARG basebuilder=registry.access.redhat.com/ubi9/ubi
+ARG baseruntime=scratch
+ARG VERSION=6.3.x
 
-COPY *.sh docker.yaml symfony /tmp/
+FROM ${basebuilder} AS builder
+
+COPY scripts/*.sh docker.yaml symfony /tmp/
 RUN chmod +rx /tmp/*.sh
 RUN bash /tmp/install.sh && rm -rf /tmp/*
 
-FROM scratch
+FROM ${baseruntime} AS runtime
 
 COPY --from=builder /mnt/rootfs/ /
 
