@@ -12,9 +12,9 @@ RELEASE_REPORT+="| :-: | :-: | :-: | :-: |"
 echo "DEBUG: Metadata : $JSON_DATA"
 
 for image in "${images[@]}"; do
-  BUILD_TAG=$(echo "$JSON_DATA" | jq -r ".[] | .$image.BUILD_TAG")
-  IMAGE_ID=$(echo "$JSON_DATA" | jq -r ".[] | .$image.IMAGE_ID")
-  CREATED=$(echo "$JSON_DATA" | jq -r ".[] | .$image.CREATED")
+  BUILD_TAG=$(echo "$JSON_DATA" | jq -r ".[\"${image}\"].BUILD_TAG")
+  IMAGE_ID=$(echo "$JSON_DATA" | jq -r ".[\"${image}\"].IMAGE_ID")
+  CREATED=$(echo "$JSON_DATA" | jq -r ".[\"${image}\"].CREATED")
   RELEASE_REPORT+="\n|$image|${BUILD_TAG}|${IMAGE_ID}|${CREATED}|"
 done
 
