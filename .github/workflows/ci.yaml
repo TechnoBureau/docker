@@ -14,9 +14,9 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  MAJOR: 1
+  MAJOR: 11
   MINOR: 0
-  FIX: 0
+  FIX: 1
 
 jobs:
   initialize:
@@ -36,20 +36,19 @@ jobs:
       - name: Identify images
         id: identify-images
         run: |
-          ./scripts/initialize.sh ${{ github.ref }} ${{ github.ref_type }} ${{ github.event.inputs.version }} >> $GITHUB_OUTPUT
+          ./scripts/initialize.sh ${{ github.ref }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.version }} >> $GITHUB_OUTPUT
 
   BuildImages:
     runs-on: ubuntu-latest
     needs: [initialize]
     if: success()
-    outputs:
-      images_metadata: ${{ steps.set_metadata.outputs.images_metadata }}
 
     strategy:
       matrix:
         image: ${{ fromJson(needs.initialize.outputs.images) }}
       fail-fast: false
-
+    concurrency:
+      group: example-group
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -115,7 +114,7 @@ jobs:
           CREATED=$(echo "$DOCKER_METADATA_OUTPUT_JSON" | jq -r '.labels."org.opencontainers.image.created"')
 
           result="{ \"$IMAGE_NAME\": { \"BUILD_TAG\":\"$BUILD_TAG\",\"IMAGE_ID\":\"$IMAGE_ID\",\"CREATED\":\"$CREATED\" } }"
-          echo "images_metadata=[$result]" >> $GITHUB_OUTPUT
+          ./scripts/set_image_metadata.sh "$result" '${{ needs.initialize.outputs.version }}' '${{ secrets.GITHUB_TOKEN }}'
 
   GenerateImageReleaseReport:
     name: Generate image release - ${{ needs.initialize.outputs.version }}
@@ -130,5 +129,5 @@ jobs:
       - name: Generate images release report
         id: generate_release
         run: |
-          ./scripts/generate_release_report.sh '${{ needs.initialize.outputs.images }}' '${{ needs.BuildImages.outputs.images_metadata }}' '${{ needs.initialize.outputs.version }}' '${{ secrets.GITHUB_TOKEN }}'
+          ./scripts/generate_release_report.sh '${{ needs.initialize.outputs.version }}' '${{ secrets.GITHUB_TOKEN }}' >> $GITHUB_STEP_SUMMARY
 
