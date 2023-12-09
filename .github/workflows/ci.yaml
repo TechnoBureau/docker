@@ -14,9 +14,9 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  MAJOR: 11
+  MAJOR: 1
   MINOR: 0
-  FIX: 1
+  FIX: 0
 
 jobs:
   initialize:
@@ -47,9 +47,9 @@ jobs:
       matrix:
         image: ${{ fromJson(needs.initialize.outputs.images) }}
       fail-fast: false
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: false
+    # concurrency:
+    #   group: ${{ github.workflow }}-${{ github.ref }}
+    #   cancel-in-progress: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
