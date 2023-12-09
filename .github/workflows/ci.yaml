@@ -48,7 +48,7 @@ jobs:
         image: ${{ fromJson(needs.initialize.outputs.images) }}
       fail-fast: false
     concurrency:
-      group: example-group
+      group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: false
     steps:
       - name: Checkout repository
