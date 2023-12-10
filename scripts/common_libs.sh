@@ -60,11 +60,11 @@ update_release_notes() {
   local body="$3"
 
   # Update release body on GitHub
-  curl -s -L -X PATCH \
+  curl -s -X PATCH \
     -H "Authorization: Bearer $token" \
-    -H "Content-Type: application/vnd.github.v3+json" \
+    -H "Accept: application/vnd.github.v3+json" \
     -d '{"body": "'"$body"'"}' \
-    "https://uploads.github.com/repos/$GITHUB_REPOSITORY/releases/$release_id" > /dev/null
+    "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/$release_id"
 }
 
 # Define function to extract version from Dockerfile
