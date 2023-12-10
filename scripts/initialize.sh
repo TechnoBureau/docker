@@ -34,6 +34,7 @@ images=$(echo "$(jq -r -n --argjson input "{$images_metadata}" '$input | keys_un
 
 # Upload assets if tagging a release
 if [[ "$GITHUB_REF" =~ "refs/tags/" ]]; then
+echo "{$images_metadata}" > $ASSET_NAME
 RELEASE_ID=$(get_release_id "$GENERAL_VERSION" "$GITHUB_TOKEN")
 upload_asset "$RELEASE_ID" "$GITHUB_TOKEN" "$ASSET_NAME"
 fi
