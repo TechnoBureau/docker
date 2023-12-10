@@ -38,7 +38,7 @@ RELEASE_ID=$(get_release_id "$GENERAL_VERSION" "$GITHUB_TOKEN")
 upload_asset "$RELEASE_ID" "$GITHUB_TOKEN" "$ASSET_NAME"
 fi
 
-echo "images={$images}"
+echo "images=[$images]"
 echo "images_metadata={$images_metadata}"
 echo "version=${GENERAL_VERSION}"
 
