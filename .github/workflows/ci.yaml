@@ -64,10 +64,12 @@ jobs:
         run: |
           ./scripts/get_image_version.sh '${{ needs.initialize.outputs.images_metadata }}' '${{ matrix.image }}' >> $GITHUB_OUTPUT
           if [ "${{ matrix.image }}" != "ubi-builders" ]; then
-            echo "docker-builder=docker-image://ubi-builders" >> $GITHUB_OUTPUT
+            echo "docker-builder=docker-image://${{ env.REGISTRY }}/${OWNER,,}/ubi-builders:latest" >> $GITHUB_OUTPUT
           else
             echo "docker-builder=." >> $GITHUB_OUTPUT
           fi
+        env:
+            OWNER: '${{ github.repository_owner }}'
 
       - name: Extract Docker metadata
         id: meta
