@@ -16,6 +16,6 @@ RUN add-apt-repository \
     "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/debian \
     $(lsb_release -cs) \
     stable"
-RUN apt-get update && install_packages docker-ce docker-ce-cli containerd.io
+RUN apt-get update && install_packages docker-ce-cli
 
 USER 1001
