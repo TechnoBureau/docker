@@ -5,6 +5,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/common_libs.sh"
 GITHUB_REF=$1
 GITHUB_TOKEN=$2
 INPUT_VERSION=$3
+IMAGES=$4
 ASSET_NAME=release.json
 cd "$(dirname "${BASH_SOURCE[0]}")/../builders" || exit 1
 
@@ -23,7 +24,18 @@ get_version() {
 GENERAL_VERSION=$(get_version)
 
 images_metadata=""
-for d in *; do
+if [ -z "$IMAGES" ] || [ "$IMAGES" = "*" ]; then
+    # If empty, use * to get all files under a folder
+  IMAGES=$(find . -maxdepth 1 -type d -not -name '.*' -exec basename {} \; | tr '\n' ',' | sed 's/,$//')
+else
+  IMAGES=$(echo "$IMAGES" | tr ' ' ',')
+  IMAGES=$(echo "$IMAGES" | tr -cd '[:alnum:],*')
+fi
+IFS=','
+echo $IMAGES
+read -a image_array <<< "$IMAGES"
+
+for d in "${image_array[@]}"; do
   if is_valid_image_dir "$d"; then
     image_data=$(get_image_data "$d")
     images_metadata+="${images_metadata:+,}$image_data"

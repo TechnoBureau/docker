@@ -4,6 +4,9 @@ ARG VERSION=8.1.x
 
 FROM ${basebuilder} AS builder
 
+SHELL ["/bin/bash", "-o", "errexit", "-o", "nounset", "-o", "pipefail", "-c"]
+COPY --from=docker-builder /mnt/rootfs /mnt/rootfs
+
 COPY scripts/*.sh docker.yaml php /tmp/
 RUN chmod +rx /tmp/*.sh
 RUN bash /tmp/install.sh && rm -rf /tmp/*

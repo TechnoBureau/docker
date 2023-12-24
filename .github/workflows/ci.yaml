@@ -11,6 +11,11 @@ on:
       version:
         description: 'Custom version (optional)'
         required: false
+        default: "1.0.0"
+      images:
+        description: 'Selecting Images to be build (optional)'
+        required: false
+        default: "*"
 
 env:
   REGISTRY: ghcr.io
@@ -36,7 +41,7 @@ jobs:
       - name: Identify images
         id: identify-images
         run: |
-          ./scripts/initialize.sh ${{ github.ref }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.version }} >> $GITHUB_OUTPUT
+          ./scripts/initialize.sh ${{ github.ref }} ${{ secrets.GITHUB_TOKEN }} ${{ github.event.inputs.version }} ${{ github.event.inputs.images }} >> $GITHUB_OUTPUT
 
   BuildImages:
     runs-on: ubuntu-latest
@@ -92,19 +97,26 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Determine build contexts
+        id: determine-contexts
+        run: |
+          if [ "${{ matrix.image }}" != "ubi-builders" ]; then
+            echo "docker-builder=docker-image://ubi-builders"
+          else
+            echo ""
+          fi
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@v5
         with:
           context: "{{defaultContext}}:builders"
+          build-contexts: |
+            ${{ steps.determine-contexts.outputs }}
           push: ${{ github.event_name != 'pull_request' }}
           provenance: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: |
-            type=registry,ref=${{ env.REGISTRY }}/${{ github.repository_owner | lower }}/builders:latest
-            type=registry,ref=registry.access.redhat.com/ubi9/ubi
-            type=gha
+          cache-from: type=gha,mode=max
           cache-to: type=gha,mode=max
           file: ${{ matrix.image }}/${{ matrix.image }}.Dockerfile
           platforms: linux/amd64,linux/arm64

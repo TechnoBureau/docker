@@ -4,6 +4,9 @@ ARG VERSION=3.9.x
 
 FROM ${basebuilder} AS builder
 
+SHELL ["/bin/bash", "-o", "errexit", "-o", "nounset", "-o", "pipefail", "-c"]
+COPY --from=docker-builder /mnt/rootfs /mnt/rootfs
+
 COPY scripts/*.sh docker.yaml python /tmp/
 RUN chmod +rx /tmp/*.sh
 RUN bash /tmp/install.sh && rm -rf /tmp/*
