@@ -101,7 +101,9 @@ jobs:
           provenance: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{github.repository_owner}}/${{ matrix.image }}:latest
+            type=gha
           cache-to: type=gha,mode=max
           file: ${{ matrix.image }}/${{ matrix.image }}.Dockerfile
           platforms: linux/amd64,linux/arm64

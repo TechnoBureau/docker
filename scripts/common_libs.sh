@@ -64,7 +64,7 @@ update_release_notes() {
     -H "Authorization: Bearer $token" \
     -H "Accept: application/vnd.github.v3+json" \
     -d '{"body": "'"$body"'"}' \
-    "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/$release_id"
+    "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/$release_id" > /dev/null
 }
 
 # Define function to extract version from Dockerfile
