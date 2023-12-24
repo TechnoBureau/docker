@@ -105,7 +105,7 @@ jobs:
             type=registry,ref=${{ env.REGISTRY }}/${{github.repository_owner}}/${{ matrix.image }}:latest
             type=registry,ref=${{ env.REGISTRY }}/${{github.repository_owner}}/registry.access.redhat.com/ubi9/ubi
             type=gha
-            path=/mnt/rootfs
+            type=local,path=/mnt/rootfs
           cache-to: type=gha,mode=max
           file: ${{ matrix.image }}/${{ matrix.image }}.Dockerfile
           platforms: linux/amd64,linux/arm64
