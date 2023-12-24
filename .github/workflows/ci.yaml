@@ -102,10 +102,9 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: |
-            type=registry,ref=${{ env.REGISTRY }}/${{github.repository_owner}}/${{ matrix.image }}:latest
-            type=registry,ref=${{ env.REGISTRY }}/${{github.repository_owner}}/registry.access.redhat.com/ubi9/ubi
+            type=registry,ref=${{ env.REGISTRY }}/${{ github.repository_owner | lower }}/builders:latest
+            type=registry,ref=registry.access.redhat.com/ubi9/ubi
             type=gha
-            type=local,src=/mnt/rootfs
           cache-to: type=gha,mode=max
           file: ${{ matrix.image }}/${{ matrix.image }}.Dockerfile
           platforms: linux/amd64,linux/arm64
