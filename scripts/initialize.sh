@@ -32,7 +32,7 @@ else
   IMAGES=$(echo "$IMAGES" | tr -cd '[:alnum:],*')
 fi
 IFS=','
-echo $IMAGES
+
 read -a image_array <<< "$IMAGES"
 
 for d in "${image_array[@]}"; do
