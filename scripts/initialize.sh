@@ -5,7 +5,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/common_libs.sh"
 GITHUB_REF=$1
 GITHUB_TOKEN=$2
 INPUT_VERSION=$3
-IMAGES=$4
+IMAGE_INPUT=$4
 ASSET_NAME=release.json
 cd "$(dirname "${BASH_SOURCE[0]}")/../builders" || exit 1
 
@@ -24,16 +24,16 @@ get_version() {
 GENERAL_VERSION=$(get_version)
 
 images_metadata=""
-if [ -z "$IMAGES" ] || [ "$IMAGES" = "*" ]; then
+if [ -z "$IMAGE_INPUT" ] || [ "$IMAGE_INPUT" = "*" ]; then
     # If empty, use * to get all files under a folder
-  IMAGES=$(find . -maxdepth 1 -type d -not -name '.*' -exec basename {} \; | tr '\n' ',' | sed 's/,$//')
+  IMAGE_LIST=$(find . -maxdepth 1 -type d -not -name '.*' -exec basename {} \; | tr '\n' ',' | sed 's/,$//')
 else
-  IMAGES=$(echo "$IMAGES" | tr ' ' ',')
-  IMAGES=$(echo "$IMAGES" | tr -cd '[:alnum:],*')
+  IMAGE_LIST=$(echo "$IMAGE_INPUT" | tr ' ' ',')
+  IMAGE_LIST=$(echo "$IMAGE_INPUT" | tr -cd '[:alnum:],*-')
 fi
-IFS=','
+IFS=', '
 
-read -a image_array <<< "$IMAGES"
+read -a image_array <<< "$IMAGE_LIST"
 
 for d in "${image_array[@]}"; do
   if is_valid_image_dir "$d"; then

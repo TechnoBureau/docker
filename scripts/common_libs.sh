@@ -74,7 +74,12 @@ get_version_from_dockerfile() {
 }
 
 is_valid_image_dir() {
-  [[ -d "$1" && ! -f "$1/skip" ]]
+  if [[ -n "$IMAGE_INPUT" && "$IMAGE_INPUT" != "*" ]]; then
+    # Skip file existence check when IMAGES is set and not "*"
+    [[ -d "$1" &&  -f "$1/$1.Dockerfile" ]]
+  else
+    [[ -d "$1" && ! -f "$1/skip" ]]
+  fi
 }
 get_image_data() {
   local image_name="$1"

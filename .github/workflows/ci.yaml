@@ -63,6 +63,11 @@ jobs:
         id: extract_version
         run: |
           ./scripts/get_image_version.sh '${{ needs.initialize.outputs.images_metadata }}' '${{ matrix.image }}' >> $GITHUB_OUTPUT
+          if [ "${{ matrix.image }}" != "ubi-builders" ]; then
+            echo "docker-builder=docker-image://ubi-builders" >> $GITHUB_OUTPUT
+          else
+            echo "docker-builder=." >> $GITHUB_OUTPUT
+          fi
 
       - name: Extract Docker metadata
         id: meta
@@ -97,21 +102,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Determine build contexts
-        id: determine-contexts
-        run: |
-          if [ "${{ matrix.image }}" != "ubi-builders" ]; then
-            echo "docker-builder=docker-image://ubi-builders"
-          else
-            echo ""
-          fi
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@v5
         with:
           context: "{{defaultContext}}:builders"
           build-contexts: |
-            ${{ steps.determine-contexts.outputs }}
+            docker-builder=${{ steps.extract_version.outputs.docker-builder }}
           push: ${{ github.event_name != 'pull_request' }}
           provenance: false
           tags: ${{ steps.meta.outputs.tags }}
