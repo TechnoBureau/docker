@@ -62,11 +62,11 @@ jobs:
       - name: Extract image version
         id: extract_metadata
         run: |
-          VERSION=$(./scripts/get_image_property.sh '${{ needs.initialize.outputs.images_metadata }}' '${{ matrix.image }}' 'VERSION')
+          version=$(./scripts/get_image_property.sh '${{ needs.initialize.outputs.images_metadata }}' '${{ matrix.image }}' 'version')
           platform=$(./scripts/get_image_property.sh '${{ needs.initialize.outputs.images_metadata }}' '${{ matrix.image }}' 'platform')
           img_platform=$(./scripts/get_image_property.sh '${{ needs.initialize.outputs.images_metadata }}' '${{ matrix.image }}' 'platform' 'linux/')
 
-          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "VERSION=$version" >> $GITHUB_OUTPUT
           echo "platform=$platform" >> $GITHUB_OUTPUT
           echo "img_platform=$img_platform" >> $GITHUB_OUTPUT
 
