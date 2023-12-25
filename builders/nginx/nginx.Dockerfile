@@ -1,13 +1,17 @@
 # Copyright VMware, Inc.
 # SPDX-License-Identifier: APACHE-2.0
+ARG ubi9=iregistry.eur.ad.sag/kub-sic/ubi9:ubi
+ARG baseruntime=${ubi9}
+ARG VERSION=1.24.0
+
+FROM ${baseruntime} AS runtime
 
 FROM registry.access.redhat.com/ubi9/ubi-minimal
 
 ENV HOME="/" \
-    OS_ARCH="${TARGETARCH:-amd64}" \
     OS_FLAVOUR="ubi-9" \
     OS_NAME="linux"
-
+ENV OS_ARCH=amd64
 COPY prebuildfs /
 SHELL ["/bin/bash", "-o", "errexit", "-o", "nounset", "-o", "pipefail", "-c"]
 # Install required system packages and dependencies

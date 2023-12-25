@@ -60,9 +60,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Extract image version
-        id: extract_version
+        id: extract_metadata
         run: |
-          ./scripts/get_image_version.sh '${{ needs.initialize.outputs.images_metadata }}' '${{ matrix.image }}' >> $GITHUB_OUTPUT
+          VERSION=$(./scripts/get_image_property.sh '${{ needs.initialize.outputs.images_metadata }}' '${{ matrix.image }}' 'VERSION')
+          platform=$(./scripts/get_image_property.sh '${{ needs.initialize.outputs.images_metadata }}' '${{ matrix.image }}' 'platform')
+          img_platform=$(./scripts/get_image_property.sh '${{ needs.initialize.outputs.images_metadata }}' '${{ matrix.image }}' 'platform' 'linux/')
+
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "platform=$platform" >> $GITHUB_OUTPUT
+          echo "img_platform=$img_platform" >> $GITHUB_OUTPUT
+
           if [ "${{ matrix.image }}" != "ubi-builders" ]; then
             echo "docker-builder=docker-image://${{ env.REGISTRY }}/${OWNER,,}/ubi-builders:latest" >> $GITHUB_OUTPUT
           else
@@ -78,20 +85,20 @@ jobs:
           images: ${{ env.REGISTRY }}/${{github.repository_owner}}/${{ matrix.image }}
           flavor: latest=true
           tags: |
-            type=raw,enable=true,priority=200,prefix=,suffix=,value=${{ steps.extract_version.outputs.VERSION }}.${{ github.run_number }}
+            type=raw,enable=true,priority=200,prefix=,suffix=,value=${{ steps.extract_metadata.outputs.VERSION }}.${{ github.run_number }}
           labels: |
             maintainer=${{github.repository_owner}}
             name=${{github.repository_owner}}/${{ matrix.image }}
             io.k8s.display-name=${{github.repository_owner}}/${{ matrix.image }}
-            version=${{ steps.extract_version.outputs.VERSION }}
+            version=${{ steps.extract_metadata.outputs.VERSION }}
             org.opencontainers.image.title=${{github.repository_owner}}/${{ matrix.image }}
-            org.opencontainers.image.version=${{ steps.extract_version.outputs.VERSION }}.${{ github.run_number }}
+            org.opencontainers.image.version=${{ steps.extract_metadata.outputs.VERSION }}.${{ github.run_number }}
             org.opencontainers.image.description=${{github.repository_owner}}/${{ matrix.image }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
         with:
-          platforms: 'arm64,arm'
+          platforms: ${{ steps.extract_metadata.outputs.platform }}
 
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v3
@@ -110,7 +117,7 @@ jobs:
         with:
           context: "{{defaultContext}}:builders"
           build-contexts: |
-            docker-builder=${{ steps.extract_version.outputs.docker-builder }}
+            docker-builder=${{ steps.extract_metadata.outputs.docker-builder }}
           push: ${{ github.event_name != 'pull_request' }}
           provenance: false
           tags: ${{ steps.meta.outputs.tags }}
@@ -118,13 +125,13 @@ jobs:
           cache-from: type=gha,mode=max
           cache-to: type=gha,mode=max
           file: ${{ matrix.image }}/${{ matrix.image }}.Dockerfile
-          platforms: linux/amd64,linux/arm64
+          platforms: ${{ steps.extract_metadata.outputs.img_platform }}
 
       - name: Set image metadata
         id: set_metadata
         run: |
           IMAGE_NAME="${{ matrix.image }}"
-          BUILD_TAG="${{ steps.extract_version.outputs.VERSION }}.${{ github.run_number }}"
+          BUILD_TAG="${{ steps.extract_metadata.outputs.VERSION }}.${{ github.run_number }}"
           IMAGE_ID=$(echo "${{ steps.build-and-push.outputs.imageID }}" | sed 's/^sha256://' | cut -c1-12)
           CREATED=$(echo "$DOCKER_METADATA_OUTPUT_JSON" | jq -r '.labels."org.opencontainers.image.created"')
 
