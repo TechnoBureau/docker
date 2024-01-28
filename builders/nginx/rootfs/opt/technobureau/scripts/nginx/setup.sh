@@ -40,6 +40,9 @@ if [[ -f "${NGINX_CONF_DIR}/certs/server.crt" ]] && [[ -n "${NGINX_HTTPS_PORT_NU
     cp "${TECHNOBUREAU_ROOT_DIR}/scripts/nginx/technobureau-templates/default-https-server-block.conf" "${NGINX_SERVER_BLOCKS_DIR}/default-https-server-block.conf"
 fi
 
+if [[ ! -f "${NGINX_CONF_DIR}/mime.types" ]] && [[ -f "${NGINX_ROOT_DIR}/mime.types" ]]; then
+ ln -s "${NGINX_ROOT_DIR}/mime.types" "${NGINX_CONF_DIR}/mime.types"
+fi
 # Initialize NGINX
 nginx_initialize
 

@@ -15,6 +15,7 @@
 . /opt/technobureau/scripts/liblog.sh
 
 export TECHNOBUREAU_ROOT_DIR="/opt/technobureau"
+export NGINX_ROOT_DIR="/opt/nginx"
 export TECHNOBUREAU_VOLUME_DIR="/technobureau"
 
 # Logging configuration
@@ -47,7 +48,7 @@ export WEB_SERVER_TYPE="nginx"
 # Paths
 export NGINX_BASE_DIR="${TECHNOBUREAU_ROOT_DIR}/nginx"
 export NGINX_VOLUME_DIR="${TECHNOBUREAU_VOLUME_DIR}/nginx"
-export NGINX_SBIN_DIR="${NGINX_SBIN_DIR:-${NGINX_BASE_DIR}/sbin}"
+export NGINX_SBIN_DIR="${NGINX_SBIN_DIR:-${NGINX_ROOT_DIR}/bin}"
 export NGINX_CONF_DIR="${NGINX_BASE_DIR}/conf"
 export NGINX_HTDOCS_DIR="${NGINX_BASE_DIR}/html"
 export NGINX_TMP_DIR="${NGINX_BASE_DIR}/tmp"
