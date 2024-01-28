@@ -73,4 +73,5 @@ ln -sf "/dev/stderr" "${NGINX_LOGS_DIR}/error.log"
 # "unable to write random state"
 # Source: https://stackoverflow.com/questions/94445/using-openssl-what-does-unable-to-write-random-state-mean
 
-touch /.rnd && chmod g+rw /.rnd
+touch ~/.rnd && chmod g+rw ~/.rnd
+

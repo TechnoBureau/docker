@@ -16,7 +16,7 @@
 
 export TECHNOBUREAU_ROOT_DIR="/opt/technobureau"
 export NGINX_ROOT_DIR="/opt/nginx"
-export TECHNOBUREAU_VOLUME_DIR="/technobureau"
+export TECHNOBUREAU_VOLUME_DIR="/opt/technobureau/app"
 
 # Logging configuration
 export MODULE="${MODULE:-nginx}"
@@ -54,7 +54,7 @@ export NGINX_HTDOCS_DIR="${NGINX_BASE_DIR}/html"
 export NGINX_TMP_DIR="${NGINX_BASE_DIR}/tmp"
 export NGINX_LOGS_DIR="${NGINX_BASE_DIR}/logs"
 export NGINX_SERVER_BLOCKS_DIR="${NGINX_CONF_DIR}/server_blocks"
-export NGINX_INITSCRIPTS_DIR="/docker-entrypoint-initdb.d"
+export NGINX_INITSCRIPTS_DIR="${TECHNOBUREAU_ROOT_DIR}/docker-entrypoint-initdb.d"
 export NGINX_CONF_FILE="${NGINX_CONF_DIR}/nginx.conf"
 export NGINX_PID_FILE="${NGINX_TMP_DIR}/nginx.pid"
 export PATH="${NGINX_SBIN_DIR}:${TECHNOBUREAU_ROOT_DIR}/common/bin:${PATH}"

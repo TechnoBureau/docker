@@ -129,30 +129,27 @@ generate_cron_conf() {
         shift
     done
 
-    mkdir -p /etc/cron.d
+    mkdir -p /var/spool/cron
     if "$clean"; then
-        cat > "/etc/cron.d/${service_name}" <<EOF
-# Copyright VMware, Inc.
-# SPDX-License-Identifier: APACHE-2.0
-
-${schedule} ${run_as} ${cmd}
+        cat > "/var/spool/cron/${run_as}" <<EOF
+${schedule} ${cmd}
 EOF
     else
-        echo "${schedule} ${run_as} ${cmd}" >> /etc/cron.d/"$service_name"
+        echo "${schedule} ${cmd}" >> /var/spool/cron/"${run_as}"
     fi
 }
 
 ########################
 # Remove a cron configuration file for a given service
 # Arguments:
-#   $1 - Service name
+#   $1 - User to run as
 # Returns:
 #   None
 #########################
 remove_cron_conf() {
-    local service_name="${1:?service name is missing}"
-    local cron_conf_dir="/etc/monit/conf.d"
-    rm -f "${cron_conf_dir}/${service_name}"
+    local run_as="${1:?run_as is missing}"
+    local cron_conf_dir="/var/spool/cron/"
+    rm -f "${cron_conf_dir}/${run_as}"
 }
 
 ########################
