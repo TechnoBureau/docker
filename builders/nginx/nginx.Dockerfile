@@ -17,7 +17,7 @@ SHELL ["/bin/bash", "-o", "errexit", "-o", "nounset", "-o", "pipefail", "-c"]
 # Install required system packages and dependencies
 RUN install_packages ca-certificates curl-minimal openssl procps tar findutils
 RUN curl -L https://download.opensuse.org/repositories/home:/ganapathi/UBI9/home:ganapathi.repo -o /etc/yum.repos.d/sag.repo
-RUN install_packages nginx-core nginx-mod-headers-more nginx-mod-http-sticky nginx-mod-http-sticky
+RUN install_packages nginx-core nginx-mod-headers-more nginx-mod-http-sticky nginx-mod-http-geoip2 nginx-mod-http-vts
 
 RUN mkdir -p /opt/technobureau/nginx/logs/ && touch /opt/technobureau/nginx/logs/{access,error}.log
 RUN chmod g+rwX /opt/technobureau

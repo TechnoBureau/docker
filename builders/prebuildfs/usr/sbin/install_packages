@@ -9,7 +9,7 @@ max=2
 until [ $n -gt $max ]; do
     set +e
     (
-      microdnf update &&
+      microdnf update -y &&
       microdnf install -y --setopt install_weak_deps=0 --nodocs "$@"
     )
     CODE=$?
