@@ -39,6 +39,8 @@ ENV APP_VERSION="1.24.0" \
 
 EXPOSE 8080 8443
 
+STOPSIGNAL SIGQUIT
+
 HEALTHCHECK CMD curl --fail http://localhost:8080/status/ || exit 1
 
 ENTRYPOINT [ "/opt/technobureau/scripts/nginx/entrypoint.sh" ]
