@@ -14,7 +14,7 @@ SHELL ["/bin/bash", "-o", "errexit", "-o", "nounset", "-o", "pipefail", "-c"]
 # Install required system packages and dependencies
 RUN install_packages ca-certificates curl-minimal openssl procps tar findutils
 RUN curl -L https://download.opensuse.org/repositories/home:/ganapathi/UBI9/home:ganapathi.repo -o /etc/yum.repos.d/technobureau.repo
-RUN install_packages nginx-core nginx-mod-headers-more nginx-mod-http-sticky nginx-mod-http-geoip2 nginx-mod-http-vts geolite2-country
+RUN install_packages nginx-core.1.1 nginx-mod-headers-more.1.1 nginx-mod-http-sticky.1.1 nginx-mod-http-geoip2.1.1 nginx-mod-http-vts.1.1 geolite2-country
 
 RUN adduser \
 --home-dir /opt/technobureau \
